@@ -2,21 +2,16 @@ package shivani.com.grabtest.repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import shivani.com.grabtest.api.AppRequestService;
 import shivani.com.grabtest.db.NewsDb;
+import shivani.com.grabtest.util.AppConstants;
 import shivani.com.grabtest.util.AppUtil;
 import shivani.com.grabtest.vo.Article;
 import shivani.com.grabtest.vo.NewsResponse;
@@ -38,9 +33,9 @@ public class NewsRepository {
     }
 
     //approach 1 : if the user is online always fetch fresh data, if offline then show the last updated data
-    public Observable<NewsResponse> loadNews1() {
+    public Observable<NewsResponse> loadNews1(int index) {
         if (util.isNetworkAvailable()) {
-            return requestService.getUser("us", "3466522f76f94a9e92cffdc0d59fe43a").doOnNext(newsResponse -> {
+            return requestService.getArticle(AppConstants.COUNTRIES[index], AppConstants.API_KEY).doOnNext(newsResponse -> {
                 db.newsDao().deleteAllNews();
                 saveResponseInDb(newsResponse);
             });
@@ -62,7 +57,7 @@ public class NewsRepository {
                 newsResponse.setArticles((ArrayList<Article>) articles);
                 return Observable.just(newsResponse);
             } else {
-                return requestService.getUser("us", "3466522f76f94a9e92cffdc0d59fe43a").doOnNext(newsResponse -> {
+                return requestService.getArticle("us", "3466522f76f94a9e92cffdc0d59fe43a").doOnNext(newsResponse -> {
                     db.newsDao().deleteAllNews();
                     saveResponseInDb(newsResponse);
                 });

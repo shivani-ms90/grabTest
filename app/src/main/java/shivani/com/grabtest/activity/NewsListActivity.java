@@ -57,9 +57,9 @@ public class NewsListActivity extends AppCompatActivity implements Injectable {
     }
 
     private void initObservations() {
-        newsViewModel.getNews().observe(this, newsResponse -> {
-            if (newsResponse != null) {
-                mAdapter.refreshList(newsResponse.getArticles());
+        newsViewModel.getArticlesLiveData().observe(this, articles -> {
+            if (articles != null) {
+                mAdapter.submitList(articles);
             }
         });
         newsViewModel.isUpdating().observe(this, aBoolean -> {
@@ -69,7 +69,5 @@ public class NewsListActivity extends AppCompatActivity implements Injectable {
                 progressBar.setVisibility(View.GONE);
             }
         });
-
-        newsViewModel.getError().observe(this, s -> Toast.makeText(this, s, Toast.LENGTH_LONG).show());
     }
 }

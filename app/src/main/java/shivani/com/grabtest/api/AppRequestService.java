@@ -11,6 +11,6 @@ import shivani.com.grabtest.vo.NewsResponse;
 public interface AppRequestService {
 
     @GET("v2/top-headlines")
-    Observable<NewsResponse> getUser(@Query("country") String country, @Query("apiKey") String apiKey);
+    Observable<NewsResponse> getArticle(@Query("country") String country, @Query("apiKey") String apiKey);
 
 }
